@@ -55,7 +55,7 @@ function perlin2d(x::Float64, y::Float64, freq::Float64, depth::Int)::Float64
   xa::Float64 = x * freq;
   ya::Float64 = y * freq;
   amp::Float64 = 1.0;
-  fin::Float64 = 0;
+  fin::Float64 = 0.;
   div::Float64 = 0.0;
 
   for i = 0:(depth-1)

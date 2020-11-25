@@ -1,6 +1,10 @@
-//Written by John "nowl" on GitHub
-//https://gist.github.com/nowl/828013
+// Written by John "nowl" on GitHub
+// https://gist.github.com/nowl/828013
 #include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#define TRUE 1
+#define FALSE 0
 
 static int SEED = 0;
 
@@ -68,13 +72,51 @@ double perlin2d(double x, double y, double freq, int depth) {
   return fin / div;
 }
 
-int main(int argc, char *argv[]) {
+void run_perlin(int X, int Y) {
   int x, y;
-  for (y = 0; y < 10; y++) {
-    for (x = 0; x < 10; x++)
+  for (y = 0; y < Y; y++)
+    for (x = 0; x < X; x++)
+      perlin2d(x, y, 0.1, 4);
+}
+
+void run_perlin_verbose(int X, int Y) {
+  int x, y;
+  for (y = 0; y < Y; y++) {
+    for (x = 0; x < X; x++) {
       printf("%-10lf", perlin2d(x, y, 0.1, 4));
+    }
     printf("\n");
   }
+}
 
+int main(int argc, char *argv[]) {
+  if (argc < 3) {
+    printf("Usage %s: X Y (-verbose)\n", argv[0]);
+    return 1;
+  }
+
+  int XLIM = atoi(argv[1]);
+  int YLIM = atoi(argv[2]);
+
+  struct timespec start_time, finish_time;
+
+  int verbose = FALSE;
+
+  if (argc == 4) {
+    verbose = TRUE;
+  }
+
+  if (verbose == TRUE) {
+    clock_gettime(CLOCK_REALTIME, &start_time);
+    run_perlin_verbose(XLIM, YLIM);
+    clock_gettime(CLOCK_REALTIME, &finish_time);
+  } else {
+    clock_gettime(CLOCK_REALTIME, &start_time);
+    run_perlin(XLIM, YLIM);
+    clock_gettime(CLOCK_REALTIME, &finish_time);
+  }
+  double time_taken = (finish_time.tv_sec - start_time.tv_sec) * 1e9;
+  time_taken = (time_taken + (finish_time.tv_nsec - start_time.tv_nsec)) * 1e-9;
+  printf("Duration (s): %lf\n", time_taken);
   return 0;
 }
