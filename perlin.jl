@@ -1,6 +1,7 @@
 #Original algorithm in C by John "nowl" on GitHub
 #https://gist.github.com/nowl/828013
 #Adapted to Julia by Hayden Coffey
+#TODO: Look at stability section in docs to improve performance
 using Printf
 SEED = 0;
 
@@ -70,16 +71,16 @@ function perlin2d(x::Float64, y::Float64, freq::Float64, depth::Int)::Float64
 end
 
 function run_perlin(X::Int,Y::Int)
-  for y = 0:YLIM
-    for x = 0:XLIM
+  for y = 0:Y
+    for x = 0:X
       perlin2d(Float64(x), Float64(y), 0.1, 4);
     end
   end
 end
 
 function run_perlin_verbose(X::Int,Y::Int)
-  for y = 0:YLIM
-    for x = 0:XLIM
+  for y = 0:Y
+    for x = 0:X
         @printf("%-10lf", perlin2d(Float64(x), Float64(y), 0.1, 4));
     end
     @printf("\n");
@@ -101,7 +102,6 @@ function main()::Int
   end
 
   if verbose
-    global XLIM, YLIM
     @time run_perlin_verbose(XLIM, YLIM);
   else
     @time run_perlin(XLIM, YLIM);
