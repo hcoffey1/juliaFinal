@@ -69,12 +69,42 @@ function perlin2d(x::Float64, y::Float64, freq::Float64, depth::Int)::Float64
   return fin / div;
 end
 
-function main()::Int
-  for y = 0:9
-    for x = 0:9
-      @printf("%-10lf", perlin2d(Float64(x), Float64(y), 0.1, 4));
+function run_perlin(X::Int,Y::Int)
+  for y = 0:YLIM
+    for x = 0:XLIM
+      perlin2d(Float64(x), Float64(y), 0.1, 4);
+    end
+  end
+end
+
+function run_perlin_verbose(X::Int,Y::Int)
+  for y = 0:YLIM
+    for x = 0:XLIM
+        @printf("%-10lf", perlin2d(Float64(x), Float64(y), 0.1, 4));
     end
     @printf("\n");
+  end
+end
+
+function main()::Int
+  if size(ARGS)[1] < 2
+    @printf("Usage %s: X Y (-verbose)\n", PROGRAM_FILE);
+    return 1;
+  end
+  XLIM = parse(Int, ARGS[1]) - 1;
+  YLIM = parse(Int, ARGS[2]) - 1;
+
+  verbose = false;
+
+  if size(ARGS)[1] == 3
+    verbose = true;
+  end
+
+  if verbose
+    global XLIM, YLIM
+    @time run_perlin_verbose(XLIM, YLIM);
+  else
+    @time run_perlin(XLIM, YLIM);
   end
 
   return 0;
