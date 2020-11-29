@@ -1,7 +1,8 @@
 10000 10000
-    - C         18.081941
-    - C_OpenMP  3.728667
+    - C                 18.081941
+    - C_OpenMP          3.728667
 
-    - Julia     413.358
-    - Python    867.2399
+    - Julia             413.358
+    - Julia_Threaded    147.688992
+    - Python            867.2399
     
