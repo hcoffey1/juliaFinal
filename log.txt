@@ -5,4 +5,3 @@ Perlin Noise 10000x10000 Matrix
     - Julia Threaded        147.688992
     - Python                867.2399
     - Python Multiprocess   314.748223954
-    
