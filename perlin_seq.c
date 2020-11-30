@@ -72,11 +72,11 @@ double perlin2d(double x, double y, double freq, int depth) {
   return fin / div;
 }
 
-void run_perlin(int X, int Y) {
+void run_perlin(int X, int Y, double * data) {
   int x, y;
   for (y = 0; y < Y; y++)
     for (x = 0; x < X; x++)
-      perlin2d(x, y, 0.1, 4);
+      data[x + y*X] = perlin2d(x, y, 0.1, 4);
 }
 
 void run_perlin_verbose(int X, int Y) {
@@ -102,19 +102,28 @@ int main(int argc, char *argv[]) {
 
   int verbose = FALSE;
 
+  double *data = (double *)malloc(sizeof(double) * XLIM * YLIM);
+
   if (argc == 4) {
     verbose = TRUE;
   }
 
+  clock_gettime(CLOCK_REALTIME, &start_time);
+  run_perlin(XLIM, YLIM, data);
+  clock_gettime(CLOCK_REALTIME, &finish_time);
+
   if (verbose == TRUE) {
-    clock_gettime(CLOCK_REALTIME, &start_time);
-    run_perlin_verbose(XLIM, YLIM);
-    clock_gettime(CLOCK_REALTIME, &finish_time);
-  } else {
-    clock_gettime(CLOCK_REALTIME, &start_time);
-    run_perlin(XLIM, YLIM);
-    clock_gettime(CLOCK_REALTIME, &finish_time);
+    for(int i = 0; i < YLIM; i++)
+    {
+      for(int j = 0; j < XLIM; j++)
+      {
+        printf("%-10lf", data[j + i*XLIM]);
+      }
+      printf("\n");
+    }
   }
+
+
   double time_taken = (finish_time.tv_sec - start_time.tv_sec) * 1e9;
   time_taken = (time_taken + (finish_time.tv_nsec - start_time.tv_nsec)) * 1e-9;
   printf("Duration (s): %lf\n", time_taken);
